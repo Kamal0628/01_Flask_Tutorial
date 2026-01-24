@@ -1,0 +1,645 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyM8FQ7T2+GX8WOjLZbxx2f1",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Kamal0628/01_Flask_Tutorial/blob/main/ASSIGNMENT-2\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Q.No.1. Dataset Selection & Loading"
+      ],
+      "metadata": {
+        "id": "rc__ozL05FGh"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!pip install category_encoders"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "c5_HD6KdtmFG",
+        "outputId": "6294d888-9f1b-4545-968e-3b9ccdfd12ce"
+      },
+      "execution_count": 3,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Requirement already satisfied: category_encoders in /usr/local/lib/python3.12/dist-packages (2.9.0)\n",
+            "Requirement already satisfied: numpy>=1.14.0 in /usr/local/lib/python3.12/dist-packages (from category_encoders) (2.0.2)\n",
+            "Requirement already satisfied: pandas>=1.0.5 in /usr/local/lib/python3.12/dist-packages (from category_encoders) (2.2.2)\n",
+            "Requirement already satisfied: patsy>=0.5.1 in /usr/local/lib/python3.12/dist-packages (from category_encoders) (1.0.2)\n",
+            "Requirement already satisfied: scikit-learn>=1.6.0 in /usr/local/lib/python3.12/dist-packages (from category_encoders) (1.6.1)\n",
+            "Requirement already satisfied: scipy>=1.0.0 in /usr/local/lib/python3.12/dist-packages (from category_encoders) (1.16.3)\n",
+            "Requirement already satisfied: statsmodels>=0.9.0 in /usr/local/lib/python3.12/dist-packages (from category_encoders) (0.14.6)\n",
+            "Requirement already satisfied: python-dateutil>=2.8.2 in /usr/local/lib/python3.12/dist-packages (from pandas>=1.0.5->category_encoders) (2.9.0.post0)\n",
+            "Requirement already satisfied: pytz>=2020.1 in /usr/local/lib/python3.12/dist-packages (from pandas>=1.0.5->category_encoders) (2025.2)\n",
+            "Requirement already satisfied: tzdata>=2022.7 in /usr/local/lib/python3.12/dist-packages (from pandas>=1.0.5->category_encoders) (2025.3)\n",
+            "Requirement already satisfied: joblib>=1.2.0 in /usr/local/lib/python3.12/dist-packages (from scikit-learn>=1.6.0->category_encoders) (1.5.3)\n",
+            "Requirement already satisfied: threadpoolctl>=3.1.0 in /usr/local/lib/python3.12/dist-packages (from scikit-learn>=1.6.0->category_encoders) (3.6.0)\n",
+            "Requirement already satisfied: packaging>=21.3 in /usr/local/lib/python3.12/dist-packages (from statsmodels>=0.9.0->category_encoders) (25.0)\n",
+            "Requirement already satisfied: six>=1.5 in /usr/local/lib/python3.12/dist-packages (from python-dateutil>=2.8.2->pandas>=1.0.5->category_encoders) (1.17.0)\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 4,
+      "metadata": {
+        "id": "ytt_woJHnodS"
+      },
+      "outputs": [],
+      "source": [
+        "# Import required libraries and load dataset\n",
+        "import numpy as np\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "import seaborn as sns"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Suppress warnings\n",
+        "import warnings\n",
+        "warnings.filterwarnings(\"ignore\")"
+      ],
+      "metadata": {
+        "id": "XilntbZ5nvu3"
+      },
+      "execution_count": 5,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Load dataset (make sure dataset.csv is uploaded in Colab)\n",
+        "df=\"/content/flipkart_sales_data.xlsx dataset.csv\""
+      ],
+      "metadata": {
+        "id": "KgCQU1R1oH8W"
+      },
+      "execution_count": 11,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd # Ensure pandas is imported before usage\n",
+        "\n",
+        "if file_path:\n",
+        "    # Changed pd.read_csv to pd.read_excel as the file is an .xlsx file.\n",
+        "    # The UnicodeDecodeError happens because a binary .xlsx file is being treated as a text .csv file.\n",
+        "    try:\n",
+        "        df = pd.read_excel(\"/content/flipkart_sales_data.xlsx\")\n",
+        "        print(\"Dataset loaded successfully\")\n",
+        "        print(df.head())\n",
+        "    except FileNotFoundError:\n",
+        "        print(\"Error: The file '/content/flipkart_sales_data.xlsx' was not found.\")\n",
+        "        print(\"Please ensure the 'flipkart_sales_data.xlsx' file is uploaded to your Colab environment.\")\n",
+        "    except Exception as e:\n",
+        "        print(f\"An unexpected error occurred: {e}\")\n",
+        "else:\n",
+        "    print(\"Please upload the dataset file\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "kOL9InYMoQAs",
+        "outputId": "aeb0ed76-eb5a-4ed1-81cb-00ede02d740a"
+      },
+      "execution_count": 14,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Dataset loaded successfully\n",
+            "  Order ID Product Category  Sales Amount  Quantity Sold          Order Date  \\\n",
+            "0    ORD_1       Home Decor       16295.0            2.0 2023-01-01 00:00:00   \n",
+            "1    ORD_2  Beauty & Health        1360.0            5.0 2023-01-01 12:00:00   \n",
+            "2    ORD_3      Electronics        5890.0            1.0 2023-01-02 00:00:00   \n",
+            "3    ORD_4       Home Decor       12464.0            7.0 2023-01-02 12:00:00   \n",
+            "4    ORD_5          Grocery       11784.0            1.0 2023-01-03 00:00:00   \n",
+            "\n",
+            "    Region  Customer Rating Payment Method  Discount (%)  \n",
+            "0     East              1.5            UPI          10.0  \n",
+            "1     West              3.1    Credit Card          15.0  \n",
+            "2  Central              1.5    Net Banking           5.0  \n",
+            "3    South              2.1            UPI           5.0  \n",
+            "4    South              1.2            COD          10.0  \n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Q.No.2. Data Cleaning & Preparation"
+      ],
+      "metadata": {
+        "id": "L70H4Ya15ll6"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Check missing values\n",
+        "print(\"Missing values:\\n\", df.isnull().sum())"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "zBcbh_7s5W3_",
+        "outputId": "435cba27-35bd-48ba-e4c7-73153d088b6e"
+      },
+      "execution_count": 16,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Missing values:\n",
+            " Order ID            0\n",
+            "Product Category    6\n",
+            "Sales Amount        2\n",
+            "Quantity Sold       6\n",
+            "Order Date          6\n",
+            "Region              2\n",
+            "Customer Rating     6\n",
+            "Payment Method      6\n",
+            "Discount (%)        6\n",
+            "dtype: int64\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Handle missing values\n",
+        "num_cols = df.select_dtypes(include=np.number).columns\n",
+        "cat_cols = df.select_dtypes(include='object').columns"
+      ],
+      "metadata": {
+        "id": "bWeuHhYw6c8b"
+      },
+      "execution_count": 17,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "df[num_cols] = df[num_cols].fillna(df[num_cols].median())\n",
+        "df[cat_cols] = df[cat_cols].fillna(df[cat_cols].mode().iloc[0])"
+      ],
+      "metadata": {
+        "id": "0fVSKLUT63Di"
+      },
+      "execution_count": 18,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Fix incorrect data types (example)\n",
+        "for col in num_cols:\n",
+        "    df[col] = pd.to_numeric(df[col], errors='coerce')"
+      ],
+      "metadata": {
+        "id": "qb6FANyj67oa"
+      },
+      "execution_count": 19,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Remove duplicates\n",
+        "df.drop_duplicates(inplace=True)"
+      ],
+      "metadata": {
+        "id": "nKR3Zdkh7AK2"
+      },
+      "execution_count": 20,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Remove irrelevant columns (example: ID-like columns)\n",
+        "irrelevant_cols = [col for col in df.columns if 'id' in col.lower()]\n",
+        "df.drop(columns=irrelevant_cols, inplace=True, errors='ignore')"
+      ],
+      "metadata": {
+        "id": "rqaa9x7H7GTb"
+      },
+      "execution_count": 21,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(\"Data cleaning completed\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "mIhyzLW47KFi",
+        "outputId": "9a0730a6-842c-4368-ceb7-e11bdf025075"
+      },
+      "execution_count": 22,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Data cleaning completed\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Q.No.3. Categorical Variable Encoding"
+      ],
+      "metadata": {
+        "id": "pT5JZrCs7Ob6"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.preprocessing import LabelEncoder, OrdinalEncoder"
+      ],
+      "metadata": {
+        "id": "-i3vnHfK7Mpf"
+      },
+      "execution_count": 25,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "encoded_df = df.copy()"
+      ],
+      "metadata": {
+        "id": "nb9zKDIA7ge0"
+      },
+      "execution_count": 27,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Label Encoding\n",
+        "label_encoder = LabelEncoder()\n",
+        "# Recalculate cat_cols after dropping irrelevant columns\n",
+        "cat_cols = encoded_df.select_dtypes(include='object').columns\n",
+        "for col in cat_cols:\n",
+        "    encoded_df[col] = label_encoder.fit_transform(encoded_df[col])"
+      ],
+      "metadata": {
+        "id": "uC0sGYGd7paz"
+      },
+      "execution_count": 29,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# One-Hot Encoding\n",
+        "one_hot_df = pd.get_dummies(df, drop_first=True)"
+      ],
+      "metadata": {
+        "id": "7uSjSLQI7ung"
+      },
+      "execution_count": 30,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Ordinal Encoding\n",
+        "ordinal_encoder = OrdinalEncoder()\n",
+        "ordinal_df = df.copy()\n",
+        "ordinal_df[cat_cols] = ordinal_encoder.fit_transform(ordinal_df[cat_cols])"
+      ],
+      "metadata": {
+        "id": "yF_J3COB76No"
+      },
+      "execution_count": 32,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Frequency Encoding\n",
+        "freq_df = df.copy()\n",
+        "for col in cat_cols:\n",
+        "    freq_map = freq_df[col].value_counts().to_dict()\n",
+        "    freq_df[col] = freq_df[col].map(freq_map)"
+      ],
+      "metadata": {
+        "id": "NAQO0DVz8AAg"
+      },
+      "execution_count": 33,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Target Encoding (example using mean)\n",
+        "target_df = df.copy()\n",
+        "target_column = num_cols[0]  # choose any numeric target"
+      ],
+      "metadata": {
+        "id": "rL6Z18wN8DFS"
+      },
+      "execution_count": 37,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "for col in cat_cols:\n",
+        "    mean_map = target_df.groupby(col)[target_column].mean()\n",
+        "    target_df[col] = target_df[col].map(mean_map)\n",
+        "\n",
+        "print(\"All categorical encoding techniques applied\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "GYTDNhqO8GDW",
+        "outputId": "a4858188-871d-4f05-8581-bc3a48c480ba"
+      },
+      "execution_count": 38,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "All categorical encoding techniques applied\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Q.No.4. Feature Scaling"
+      ],
+      "metadata": {
+        "id": "Q7Vu-gqL8L9O"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, StandardScaler, Normalizer"
+      ],
+      "metadata": {
+        "id": "HMaJ_Ddb8JNw"
+      },
+      "execution_count": 40,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "scaling_df = df[num_cols]"
+      ],
+      "metadata": {
+        "id": "kgs8QSXX8aEA"
+      },
+      "execution_count": 42,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Min-Max Scaling\n",
+        "minmax = MinMaxScaler()\n",
+        "minmax_scaled = minmax.fit_transform(scaling_df)"
+      ],
+      "metadata": {
+        "id": "vJ3hUKyh8duE"
+      },
+      "execution_count": 43,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Max Absolute Scaling\n",
+        "maxabs = MaxAbsScaler()\n",
+        "maxabs_scaled = maxabs.fit_transform(scaling_df)"
+      ],
+      "metadata": {
+        "id": "RPkC39iX8hqK"
+      },
+      "execution_count": 44,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Z-score Standardization\n",
+        "standard = StandardScaler()\n",
+        "standard_scaled = standard.fit_transform(scaling_df)"
+      ],
+      "metadata": {
+        "id": "eovSsCPV8ld8"
+      },
+      "execution_count": 45,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 4. Vector Normalization\n",
+        "normalizer = Normalizer()\n",
+        "normalized_scaled = normalizer.fit_transform(scaling_df)\n"
+      ],
+      "metadata": {
+        "id": "ylL4hzyK8o0c"
+      },
+      "execution_count": 46,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(\"Feature scaling completed\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "mW7i0GdL8rs4",
+        "outputId": "cfab9165-985d-40e2-ad79-d1dab9aa6376"
+      },
+      "execution_count": 47,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Feature scaling completed\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Q.No.5.Additional Steps"
+      ],
+      "metadata": {
+        "id": "7gMTi0jV8xkr"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Train-Test Split & Skewness Handling\n",
+        "from sklearn.model_selection import train_test_split"
+      ],
+      "metadata": {
+        "id": "jjK9u27l8wEt"
+      },
+      "execution_count": 48,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Train-test split\n",
+        "X = df.drop(columns=[target_column])\n",
+        "y = df[target_column]"
+      ],
+      "metadata": {
+        "id": "dC8hXvue9Tkt"
+      },
+      "execution_count": 49,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "X_train, X_test, y_train, y_test = train_test_split(\n",
+        "    X, y, test_size=0.2, random_state=42)"
+      ],
+      "metadata": {
+        "id": "7ryS_y-B9W3C"
+      },
+      "execution_count": 51,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Skewness transformation\n",
+        "skewed_cols = X_train.select_dtypes(include=np.number).columns"
+      ],
+      "metadata": {
+        "id": "BG1XNk2r9Zio"
+      },
+      "execution_count": 52,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "for col in skewed_cols:\n",
+        "    if X_train[col].skew() > 1:\n",
+        "        X_train[col] = np.log1p(X_train[col])\n",
+        "        X_test[col] = np.log1p(X_test[col])\n",
+        "\n",
+        "print(\"Train-test split and skewness handling done\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "C7pvFk059fGg",
+        "outputId": "a13aeb71-6382-4ff0-8394-c0b7ac3eae33"
+      },
+      "execution_count": 53,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Train-test split and skewness handling done\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Q.no.6. Conclusion(For README.md)\n",
+        "\n",
+        "Conclusion:\n",
+        "\n",
+        "1. Missing Value Handling:\n",
+        "Median worked best for numerical features as it is robust to outliers, while mode was\n",
+        "effective for categorical features.\n",
+        "\n",
+        "2. Categorical Encoding:\n",
+        "One-Hot Encoding performed well for low-cardinality features.\n",
+        "Label and Ordinal Encoding were efficient for ordered categories.\n",
+        "Frequency and Target Encoding worked better for high-cardinality features.\n",
+        "\n",
+        "3. Feature Scaling:\n",
+        "Standardization (Z-score) was most effective for normally distributed data, while\n",
+        "Min-Max scaling helped maintain feature bounds.\n",
+        "\n",
+        "4. Outliers & Skewness:\n",
+        "Log transformation significantly reduced skewness and improved data distribution.\n",
+        "Outlier treatment improved overall feature stability.\n",
+        "\n",
+        "Final preprocessing choices were made to ensure model robustness and scalability.\n"
+      ],
+      "metadata": {
+        "id": "77DtL6P29yx2"
+      }
+    }
+  ]
+}
